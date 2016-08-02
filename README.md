@@ -5,9 +5,11 @@ An interactive map showing geotagged photos and videos.
 1. Install **Node.js**: [link](https://nodejs.org)
 2. Install **MongoDB**: [link](https://docs.mongodb.com/manual/installation/)
    -> on OS X you just could install it via homebrew ([link](http://brew.sh/)) for example (see: [link](https://docs.mongodb.com/master/tutorial/install-mongodb-on-os-x/?_ga=1.180592423.1050584679.1469735924))
-3. Install and Set Up Git
+3. Install and Set Up **Git**
+<p>
    -> Install: [link](https://git-scm.com/downloads)
    -> Set Up: [link](https://help.github.com/articles/set-up-git/)
+</p>
 4. On your system create a folder for storing all files related to this project.
    -> Now open the Terminal application and navigate to this folder (via the `cd command`)
 5. Now type in the follwing command into your Terminal window: `git clone https://github.com/s0539929/BA-PhotoVideoMap.git .`
