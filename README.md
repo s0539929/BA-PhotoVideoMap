@@ -1,6 +1,5 @@
 # BA-PhotoVideoMap
-An interactive map showing geotagged photos and videos.
----
+<p>An interactive map showing geotagged photos and videos.</p>
 ###Follow these steps to get it locally running on your system 
 1. Install [**Node.js**](https://nodejs.org)
 2. Install [**MongoDB**](https://docs.mongodb.com/manual/installation/)
