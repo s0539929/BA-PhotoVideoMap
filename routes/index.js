@@ -48,9 +48,10 @@ router.get('/map',function (req,res) {
 	//var db = req.db;
 	Json.find({},{}, function (err,docs) {
 		res.render('map',{
+			title: 'Leaflet map with style made with Mapbox Studio',
 			"jmap" : docs,
-			lat : 52.527571,
-			lng : 13.399194
+			lat : 50.8515,
+			lng : 12.8251
 		})
 	});
 	
