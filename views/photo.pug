@@ -1,0 +1,28 @@
+extends layout.pug
+
+block content
+    h1 
+      = title
+    #photovideo
+        //- #photo
+        //-     img(src='/images/'+ imagetitle)
+        //- #video
+        //-     video(src='videos/IMG_0169-10sec-5000k.M4V', controls)
+
+    script(type='text/javascript').
+        //jQuery.getJSON( url [, data ] [, success ] ): Load JSON-encoded data from the server using a GET HTTP request.
+        //url: string containing the URL to which the request is sent
+        //data: plain object or string that is sent to the server with the request
+        //success: callback function that is executed if the request succeeds
+        //for mor info see: http://api.jquery.com/jQuery.getJSON/
+        $.getJSON('/maplayers',function(result){
+            $.each(result, function(i, mlayer){
+                $.getJSON('/mapjson/' + mlayer.name, function(data) { addImgEl(data, mlayer.name ) });
+            });
+        });
+
+        function addImgEl(layer, name) {
+            var img = document.createElement("img");
+            img.setAttribute("alt", name);
+            return document.getElementById("photovideo").appendChild(img);
+        };
