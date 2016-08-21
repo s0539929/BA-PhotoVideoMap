@@ -3,16 +3,26 @@ extends layout.pug
 block content
     #map
     #leg_title 
-        span#leg_items Map Legend
+        span#leg_items
+        i(class="fa fa-spinner fa-spin")
     #leg
         each doc, i in jmap
             input(id=doc.id)(type='checkbox', checked)
             span#leg_items #{doc.id}
             br
+    
     script(type='text/javascript').
         
-        var map = L.map('map').setView([#{lat},#{lng}], 13);
-        //'http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+        var map = L.map('map', {center:[#{lat}, #{lng}], zoom:#{zoom}, minZoom:#{minZoom}});
+        var videoMarker = L.AwesomeMarkers.icon({
+            icon: 'video-camera', prefix: 'fa', markerColor: 'purple'
+        });
+        var photoMarker = L.AwesomeMarkers.icon({
+            icon: 'camera', prefix: 'fa', markerColor: 'orange'
+        });
+        var photopath = '/images/';
+        var videopath = '/videos/';
+
         L.tileLayer('https://api.mapbox.com/styles/v1/ariako/cirthbuad000kgzm9iu08ekts/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYXJpYWtvIiwiYSI6ImNpcnFnOWtoMTAwYm1oam5odXU3d2VqeHkifQ.hNGsmieVRgUq0QFfwmIIEg', {
             attribution: '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> © <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
@@ -25,14 +35,33 @@ block content
   
         function addLayer(layer, id) {
             var leaf_layer;
+            var marker;
             if (layer.type == "Point") {
             //latlng is an object with properties lat and lng
-                console.log(layer);
-                leaf_layer = L.geoJson(layer, { pointToLayer: function (feature, latlng) {return L.circleMarker(latlng, layer.style); }})
-                leaf_layer.bindPopup(layer.type);
+            //console.log(layer);
+                if (layer.imageprops.type == "photo") {
+                    marker = photoMarker;
+                } else if (layer.imageprops.type == "video") {
+                    marker = videoMarker;
+                };
+                leaf_layer = L.geoJson(layer, { pointToLayer: function (feature, latlng) {return L.marker(latlng, {icon:marker}); }});
+                leaf_layer.bindPopup(addImgEl(layer),{maxWidth: 'auto'});
             }
             leaf_layer.addTo(map);
             
+            function addImgEl(layer) {
+            var img = '';
+            if (layer.imageprops.type == "photo") {
+                img = document.createElement("img");
+                img.setAttribute("src", photopath + layer.imageprops.title);
+            } else if (layer.imageprops.type == "video") {
+                img = document.createElement("video");
+                img.setAttribute("src", videopath + layer.imageprops.title);
+                img.setAttribute("controls", "controls");
+            };
+            return img;
+            };
+
             //toggle layer visibility when checking the checkbox
             $('#' + id).click(function(e) {
                 
