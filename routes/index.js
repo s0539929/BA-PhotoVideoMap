@@ -62,7 +62,9 @@ router.get('/map',function (req,res) {
 			title: 'Leaflet map with style made with Mapbox Studio',
 			jmap : docs,
 			lat : 50.8515,
-			lng : 12.8251
+			lng : 12.8251, 
+			zoom : 13,
+			minZoom : 13
 		})
 	});
 	
@@ -72,8 +74,7 @@ router.get('/map',function (req,res) {
 router.get('/photo', function(req, res, next) {
 	Json.find({},{}, function (err,docs) {
   		res.render('photo', { 
-  			title: 'Photos',
-  			title: '20130603-Rottluff1.jpg'
+  			title: 'Photos'
   		});
 	});
 });

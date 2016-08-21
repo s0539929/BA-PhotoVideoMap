@@ -13,6 +13,11 @@ body {
 a {
   color:#00B7FF;
 }
+img, video {
+  max-width: 400px;
+  max-height: 400px;
+  height: auto;
+}
 #leg, #leg_title {
   position:absolute;
   top:50px;
