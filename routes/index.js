@@ -6,6 +6,10 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.get('/map02', function(req, res, next) {
+  res.render('map02', { title: 'testmap' });
+});
+
 
 /* Mongoose import */
 var mongoose = require('mongoose');
@@ -52,7 +56,7 @@ router.get('/maplayers',function (req, res, next) {
 	});
 });
 
-/*Setup a page to display a page based on a request for the URL http://localhost:3000/map*/
+/*Setup a page to display a page based on a request for the URL http:            }).addTo(mymap);//localhost:3000/map*/
 //sends a JSON object called jmap to the map.pug template with coordinates to center the map
 //the pug template has then access to this jmap variable
 router.get('/map',function (req,res) {
@@ -68,15 +72,6 @@ router.get('/map',function (req,res) {
 		})
 	});
 	
-});
-
-/* GET photo page. */
-router.get('/photo', function(req, res, next) {
-	Json.find({},{}, function (err,docs) {
-  		res.render('photo', { 
-  			title: 'Photos'
-  		});
-	});
 });
 
 module.exports = router;

@@ -3,8 +3,7 @@ extends layout.pug
 block content
     #map
     #leg_title 
-        span#leg_items
-        i(class="fa fa-spinner fa-spin")
+        span#leg_items Map Legend
     #leg
         each doc, i in jmap
             input(id=doc.id)(type='checkbox', checked)
@@ -34,17 +33,15 @@ block content
         });
   
         function addLayer(layer, id) {
-            var leaf_layer;
-            var marker;
+            var leaf_layer={};
+            var mymarker='';
             if (layer.type == "Point") {
-            //latlng is an object with properties lat and lng
-            //console.log(layer);
                 if (layer.imageprops.type == "photo") {
-                    marker = photoMarker;
+                    mymarker = photoMarker;
                 } else if (layer.imageprops.type == "video") {
-                    marker = videoMarker;
+                    mymarker = videoMarker;
                 };
-                leaf_layer = L.geoJson(layer, { pointToLayer: function (feature, latlng) {return L.marker(latlng, {icon:marker}); }});
+                leaf_layer = L.geoJson(layer, { pointToLayer: function (feature, latlng) {return L.marker(latlng, {icon:mymarker}); }});
                 leaf_layer.bindPopup(addImgEl(layer),{maxWidth: 'auto'});
             }
             leaf_layer.addTo(map);
@@ -71,4 +68,4 @@ block content
                     map.addLayer(leaf_layer);
                 }
             });
-        }
+        };

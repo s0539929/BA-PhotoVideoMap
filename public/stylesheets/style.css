@@ -4,7 +4,9 @@ html, body {
 }
 #map {
   height: 100%;
+  z-index:0;
 }
+
 body {
   margin:0;
   padding:0px;
@@ -18,6 +20,7 @@ img, video {
   max-height: 400px;
   height: auto;
 }
+
 #leg, #leg_title {
   position:absolute;
   top:50px;
