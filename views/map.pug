@@ -2,13 +2,22 @@ extends layout.pug
 
 block content
     #map
-    #leg_title 
-        span#leg_items Map Legend
-    #leg
-        each doc, i in jmap
-            input(id=doc.id)(type='checkbox', checked)
-            span#leg_items #{doc.id}
-            br
+    #datepicker
+        h4 Datenfilter
+        p
+            label(for="from") von:
+            input(type="text" id="from" name="from")
+        p
+            label(for="to") bis:
+            input(type="text" id="to" name="to")
+        //- needs to deactivate button if no dates are selected
+        p 
+            button(id="datafilter") Zeige Bilddaten
+    //- ul#dates
+    //-     each layer in jmap
+    //-         li #{layer}
+
+
     
     script(type='text/javascript').
         
@@ -21,6 +30,9 @@ block content
         });
         var photopath = '/images/';
         var videopath = '/videos/';
+        var GeojsonObjArr = [];
+        var layerGroup = new L.layerGroup();
+        var layerGroupCopy = new L.layerGroup();
 
         L.tileLayer('https://api.mapbox.com/styles/v1/ariako/cirthbuad000kgzm9iu08ekts/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYXJpYWtvIiwiYSI6ImNpcnFnOWtoMTAwYm1oam5odXU3d2VqeHkifQ.hNGsmieVRgUq0QFfwmIIEg', {
             attribution: '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> © <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -28,44 +40,148 @@ block content
         
         $.getJSON('/maplayers',function(result){
             $.each(result, function(i, mlayer){
-                $.getJSON('/mapjson/' + mlayer._id, function(data) { addLayer(data, mlayer._id) });
+                $.getJSON('/mapjson/' + mlayer._id, function(data) { addLayer(data) }).done(function(data){GeojsonObjArr.push(data);});
             });
-        });
-  
-        function addLayer(layer, id) {
+        }).done(layerGroup.addTo(map));
+        
+
+        function addLayer(layer) {
             var leaf_layer={};
+            
             var mymarker='';
-            if (layer.type == "Point") {
-                if (layer.imageprops.type == "photo") {
+            if (layer.geometry.type == "Point") {
+                if (layer.properties.type == "photo") {
                     mymarker = photoMarker;
-                } else if (layer.imageprops.type == "video") {
+                } else if (layer.properties.type == "video") {
                     mymarker = videoMarker;
                 };
-                leaf_layer = L.geoJson(layer, { pointToLayer: function (feature, latlng) {return L.marker(latlng, {icon:mymarker}); }});
+                leaf_layer = L.geoJson(layer, { 
+                    pointToLayer: function (feature, latlng) { 
+                        return L.marker(latlng, {icon:mymarker}); 
+                    }});
                 leaf_layer.bindPopup(addImgEl(layer),{maxWidth: 'auto'});
+                layerGroup.addLayer(leaf_layer);
+                layerGroupCopy.addLayer(leaf_layer);
             }
-            leaf_layer.addTo(map);
+            //leaf_layer.addTo(map);
+            //layerGroup.addTo(map);
+            //console.log("layerGroup._layers: ");
+            //console.log(layerGroup._layers);
+            //getAllMarkers();
             
             function addImgEl(layer) {
             var img = '';
-            if (layer.imageprops.type == "photo") {
+            if (layer.properties.type == "photo") {
                 img = document.createElement("img");
-                img.setAttribute("src", photopath + layer.imageprops.title);
-            } else if (layer.imageprops.type == "video") {
+                img.setAttribute("src", photopath + layer.properties.title);
+            } else if (layer.properties.type == "video") {
                 img = document.createElement("video");
-                img.setAttribute("src", videopath + layer.imageprops.title);
+                img.setAttribute("src", videopath + layer.properties.title);
                 img.setAttribute("controls", "controls");
             };
             return img;
             };
+        }//end addLayer
 
-            //toggle layer visibility when checking the checkbox
-            $('#' + id).click(function(e) {
-                
-                if (map.hasLayer(leaf_layer)) {
-                    map.removeLayer(leaf_layer);
-                } else {
-                    map.addLayer(leaf_layer);
-                }
+        $('#datafilter').click(function(e) {
+            var start = new Date($('#from').val());
+            var end = new Date($('#to').val());
+            layerGroupCopy.eachLayer(function(layer){
+                var object = layer.toGeoJSON();
+                var layerdate = new Date(object.features[0].properties.time);
+                    if((start>layerdate && layerdate>end)||(start>layerdate)||(layerdate>end)){
+                        layerGroup.removeLayer(layer);
+                    } else {
+                        if (!layerGroup.hasLayer(layer))
+                        layerGroup.addLayer(layer);
+                    }
+                }); 
+        });
+
+        
+
+        $( function() {
+            var dateFormat = "mm/dd/yy",
+            from = $( "#from" ).datepicker({
+                defaultDate: "+1w",
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                numberOfMonths: 3
+            }).on( "change", function() {
+                to.datepicker( "option", "minDate", getDate( this ) );
+                //var startDate = new Date($('#from').val());
+                //console.log(startDate);
+                }),
+            to = $( "#to" ).datepicker({
+                defaultDate: "+1w",
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                numberOfMonths: 3
+            }).on( "change", function() {
+                from.datepicker( "option", "maxDate", getDate( this ) );
+                //var endDate = new Date($('#to').val());
+                //console.log(endDate);
+                });
+            
+ 
+        function getDate( element ) {
+            var date;
+            try {
+                date = $.datepicker.parseDate( dateFormat, element.value );
+            } catch( error ) {
+                date = null;
+            }
+            return date;
+            }
             });
+
+        function getColor(d) {
+            var color ='';
+            switch(d){
+                case 'Autobahn':
+                    color = '#D6D6D6';
+                    break;
+                case 'Brücken':
+                    color = '#988D8D';
+                    break;
+                case 'Straße':
+                    color = '#FFFFFF';
+                    break;
+                case 'Wald':
+                    color = '#C5DFB0';
+                    break;
+                case 'Landwirtschaft':
+                    color = '#EEECDC';
+                    break;
+                case 'Gewässer':
+                    color = '#A7CFEB';
+                    break;
+                case 'Gebäude':
+                    color = '#D9CCBD';
+                    break;
+                case 'Wohngebiet':
+                    color = '#F0F0F0';
+                    break;
+                case 'Foto':
+                    color = '#F69730';
+                    break;
+                case 'Video':
+                    color = '#D252B9';
+                    break;
+            }
+            return color;
+            }
+
+
+        var legend = L.control({position: 'topright'});
+        legend.onAdd = function (map) {
+            //Creates an element with tagName 'div', sets the className to 'info legend', and optionally appends it to container element.
+            var div = L.DomUtil.create('div', 'info legend'),
+                grades = ['Straße', 'Wald', 'Landwirtschaft', 'Gewässer', 'Gebäude', 'Brücken','Wohngebiet', 'Foto', 'Video'];
+            // loop through our density intervals and generate a label with a colored square for each interval
+            for (var i = 0; i < grades.length; i++) {
+                div.innerHTML += '<i style="background:' + getColor(grades[i]) + '"></i> ' + grades[i] + '<br>';
+            }
+            return div;
         };
+        legend.addTo(map);

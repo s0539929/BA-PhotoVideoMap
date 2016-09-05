@@ -7,6 +7,52 @@ html, body {
   z-index:0;
 }
 
+#datepicker {
+  position: absolute;
+  top:0px;
+  left:50px;*/
+  margin-left: 10px;
+  margin-top: 10px;
+  padding: 5px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+  border-radius: 4px;
+  background: white;
+  background: rgba(255,255,255,0.5);
+}
+
+#datepicker h4, p {
+  margin-top: 0px;
+  margin-bottom: 7px;
+}
+
+#datepicker p input {
+  width: 70px;
+  margin-left: 5px;
+}
+
+#datepicker button {
+ background-color: #FFF; /* Green */
+ border: none;
+ border: 1px solid #ccc;
+ box-shadow: 0 3px 6px 0 rgba(0,0,0,0.2);
+ color: black;
+ padding: 7px 10px;
+ text-align: center;
+ text-decoration: none;
+ display: inline-block;
+ font-weight: bold;
+ margin: 4px;
+}
+
+#datepicker p button:hover {
+cursor: pointer;
+background-color: #EEE;
+}
+
+button:focus {
+    outline: none;
+}
+
 body {
   margin:0;
   padding:0px;
@@ -20,27 +66,22 @@ img, video {
   max-height: 400px;
   height: auto;
 }
-
-#leg, #leg_title {
-  position:absolute;
-  top:50px;
-  right:10px;
-  width:100px;
-  padding:10px;
-  background:rgba(34,34,34,1);
-  color:#999;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size:12px;
-  line-height:18px;
-  border-radius:3px;
-  max-height:80%;
-  overflow:auto;
+.legend {
+    line-height: 1.2em;
+    color: #555;
+    font-size: 1em;
 }
-#leg_title {
-  top:10px;
+.legend i {
+    width: 1.1em;
+    height: 1.1em;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.9;
 }
-#leg_items {
-  position:relative;
-  margin-left:5px;
-  top:-1px
+.info {
+    padding: 6px 8px;
+    background: white;
+    background: rgba(255,255,255,0.5);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
 }
