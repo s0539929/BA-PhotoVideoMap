@@ -9,6 +9,7 @@
 
    On OS X you just could install it via [homebrew](http://brew.sh/) for example. (see: https://docs.mongodb.com/master/tutorial/install-mongodb-on-os-x/?_ga=1.180592423.1050584679.1469735924)
 
+   For Windows 10 check: https://code.msdn.microsoft.com/Mongo-Database-setup-on-6963f46f
 
 3. [Install](https://git-scm.com/downloads) and [Set Up](https://help.github.com/articles/set-up-git/) **Git**
 
