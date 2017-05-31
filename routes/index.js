@@ -6,7 +6,6 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-
 /* Mongoose import */
 var mongoose = require('mongoose');
 /* Mongoose connection to MongoDB */
@@ -40,7 +39,6 @@ router.get('/maplayers',function (req, res, next) {
 	});
 });
 
-
 /*handler to GET JSON data that takes an document-id as an argument */
 router.get('/mapjson/:id', function(req, res, next) {
   if (req.params.id) {
@@ -49,9 +47,6 @@ router.get('/mapjson/:id', function(req, res, next) {
   	});
   }
 });
-
-
-
 
 /*Setup a page to display a page based on a request for the URL http://localhost:3000/map */
 //sends a JSON object called jmap to the map.pug template with coordinates to center the map
@@ -67,7 +62,6 @@ router.get('/map',function (req,res) {
 			minZoom : 13
 		})
 	});
-	
 });
 
 module.exports = router;
